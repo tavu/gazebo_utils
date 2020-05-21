@@ -1,0 +1,15 @@
+<package format="2">
+  <name>gazebo_utils</name>
+  <version>0.0.1</version>
+  <description>The gazebo_utils package</description>
+  <maintainer email="tavu@todo.todo">tavu</maintainer>
+  <license>TODO</license>
+
+  
+<exec_depend>message_runtime</exec_depend>
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>rospy</exec_depend>
+  <exec_depend>tf_to_path</exec_depend>  
+  <exec_depend>depth_rgb_sync</exec_depend>
+  <exec_depend>depth_noise</exec_depend>
+</package>
