@@ -15,7 +15,7 @@ path = Path()
 initialPoseMat = None
 baseToCamMat = None
 
-def publishPath(pose, stamp):
+def addPoseToPath(pose, stamp):
     global path, path_pub
     path.header=std_msgs.msg.Header()
     path.header.frame_id = 'odom'
@@ -27,8 +27,7 @@ def publishPath(pose, stamp):
     poseStamped.header.stamp= stamp
 
     poseStamped.pose = pose
-    path.poses.append(poseStamped)
-    path_pub.publish(path)
+    path.poses.append(poseStamped)    
 
 def gtCallback(gtOdom):
     global initialPoseMat
@@ -44,7 +43,7 @@ def gtCallback(gtOdom):
     M = np.dot(initialPoseMat,camMat)
     
     pose = rotations.poseFromHomo(M)
-    publishPath(pose, gtOdom.header.stamp)
+    addPoseToPath(pose, gtOdom.header.stamp)
     
 rospy.init_node('tf_to_path', anonymous=True)
 src_frame = None
@@ -59,7 +58,7 @@ except Exception as  e:
 
 path_pub = rospy.Publisher('/gt_path', Path, queue_size=1000)
 listener = tf.TransformListener()
-
+rate = rospy.Rate(100)
 
 while not rospy.is_shutdown():
 
@@ -72,4 +71,10 @@ while not rospy.is_shutdown():
     break
 
 rospy.Subscriber(gt_topic, Odometry, gtCallback)
-rospy.spin()
+#rospy.spin()
+
+while not rospy.is_shutdown():
+    #we have at least one measurment
+    if initialPoseMat is not None:
+        path_pub.publish(path)
+    rate.sleep()
