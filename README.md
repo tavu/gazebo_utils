@@ -92,11 +92,11 @@ Publish a path message (nav_msgs/Path) of the trajectory of the camera according
 #### gt_to_path ####
 Publish a path message (nav_msgs/Path) of the trajectory of the camera according to ground truth.
 #### Parameters ####
-Frame of the ground truth
-> src_frame 
+Frame of robot's base
+> base_frame 
 
 Camera frame
-> dst_frame 
+> cam_frame 
 
 Ground truth topic
 > gt_topic 

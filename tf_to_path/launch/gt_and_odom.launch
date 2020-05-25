@@ -5,4 +5,13 @@
         <param name="cam_frame" value="/camera_rgb_frame" /> 
         <param name="gt_topic" value="/ground_truth/base" /> 
     </node>
+    
+    <node pkg="tf_to_path" name="odom_to_path" type="gt_to_path.py"  output="screen">        
+        <param name="base_frame" value="/base_footprint" />
+        <param name="cam_frame" value="/camera_rgb_frame" /> 
+        <param name="gt_topic" value="/odom" />
+        
+        <remap from="gt_path" to="odom_path2"/>
+    </node>
+    
 </launch>
