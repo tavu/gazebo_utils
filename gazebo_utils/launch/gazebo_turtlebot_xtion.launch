@@ -56,7 +56,6 @@
             
     <include file="$(find depth_noise)/launch/depth_noise.launch" />
     <include file="$(find depth_rgb_sync)/launch/depth_rgb_sync.launch" />
-    <include file="$(find tf_to_path)/launch/tf_to_path_gazebo.launch" />
     <include file="$(find tf_to_path)/launch/gt_to_path_gazebo.launch" />
     <!--<include file="$(find kfusion_ros)/launch/kfusion_ros_gazebo.launch"/>-->
 

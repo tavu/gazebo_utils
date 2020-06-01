@@ -43,6 +43,18 @@ def pose_to_pose2D(pose):
     pose2d.theta=euler[2]    
     return pose2d 
 
+def eulerFromPose(pose):
+    q=[0,0,0,0]
+    
+    q[0]=pose.orientation.x
+    q[1]=pose.orientation.y
+    q[2]=pose.orientation.z
+    q[3]=pose.orientation.w
+    
+    euler = tf.transformations.euler_from_quaternion(q)
+    return euler
+    
+
 def pose2D_to_pose(pose2d):
     pose=Pose()
     pose.position.x = pose2d.x

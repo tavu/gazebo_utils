@@ -7,6 +7,7 @@ import rotations
 import std_msgs
 from nav_msgs.msg import Path
 from nav_msgs.msg import Odometry
+from tf2_msgs.msg import TFMessage
 from geometry_msgs.msg import PoseStamped, Pose
 import numpy as np
 
@@ -14,6 +15,22 @@ path_pub = None
 path = Path()
 initialPoseMat = None
 baseToCamMat = None
+
+def tfCallback(tf_mess):
+    
+    firstTf = tf_mess.transforms[0]
+    transform = firstTf.transform
+    p = Pose()    
+    p.position.x = transform.translation.x
+    p.position.y = transform.translation.y
+    p.position.z = transform.translation.z
+    
+    p.orientation.x = transform.rotation.x
+    p.orientation.y = transform.rotation.y
+    p.orientation.z = transform.rotation.z
+    p.orientation.w = transform.rotation.w
+    
+    gtCallback(p, firstTf.header.stamp)
 
 def addPoseToPath(pose, stamp):
     global path, path_pub
@@ -32,9 +49,8 @@ def addPoseToPath(pose, stamp):
     poseStamped.pose = pose
     path.poses.append(poseStamped)    
 
-def gtCallback(gtOdom):
+def gtCallback(pose, stamp):
     global initialPoseMat
-    pose = gtOdom.pose.pose
     if initialPoseMat is None:
         initialPoseMat = rotations.homogeneous(pose)
         initialPoseMat = np.dot(initialPoseMat,baseToCamMat)
@@ -45,7 +61,7 @@ def gtCallback(gtOdom):
     M = np.dot(initialPoseMat,camMat)
     
     pose = rotations.poseFromHomo(M)
-    addPoseToPath(pose, gtOdom.header.stamp)
+    addPoseToPath(pose, stamp)
     
 rospy.init_node('tf_to_path', anonymous=True)
 src_frame = None
@@ -65,7 +81,6 @@ rate = rospy.Rate(100)
 while not rospy.is_shutdown():    
     try:
         (baseToCamTrans,baseToCamRot) = listener.lookupTransform(base_frame, cam_frame, rospy.Time(0))
-    #except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
     except Exception as e:
         print(e)
         continue
@@ -74,7 +89,7 @@ while not rospy.is_shutdown():
     print(baseToCamMat)
     break
 
-rospy.Subscriber(gt_topic, Odometry, gtCallback)
+rospy.Subscriber(gt_topic, TFMessage, tfCallback)
 #rospy.spin()
 
 while not rospy.is_shutdown():

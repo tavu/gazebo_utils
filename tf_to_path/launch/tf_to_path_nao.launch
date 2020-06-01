@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>   
-    <param name="use_sim_time" value="true" /> 
-    <node pkg="tf_to_path" name="tf_to_path" type="tf_to_path.py"  output="screen">        
+    
+  <!--  <node pkg="tf" type="static_transform_publisher" name="tf_base_link_to_torso" args="0 0 0   0 0 0 1 base_link torso 100" /> 
+    <node pkg="tf" type="static_transform_publisher" name="tf_head_to_cam" args="0 0 0.1  0.0 0.076 0.0 0.997 Head camera_rgb_frame 100" />  
+ -->   
+<!--     <param name="use_sim_time" value="true" />  -->
+<!--    <node pkg="tf_to_path" name="tf_to_path" type="tf_to_path.py"  output="screen">        
         <param name="src_frame" value="/odom" />
         <param name="dst_frame" value="/camera_rgb_frame" />
+    </node>-->
+    
+    <node pkg="tf_to_path" name="gt_to_path" type="gt_to_path.py"  output="screen">        
+        <param name="base_frame" value="/base_link" />
+        <param name="cam_frame" value="/camera_rgb_frame" /> 
+        <param name="gt_topic" value="/nao_robot/odom" /> 
     </node>
     
     
